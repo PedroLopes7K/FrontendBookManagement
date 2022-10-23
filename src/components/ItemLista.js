@@ -1,4 +1,5 @@
 import './ItemLista.css'
+import { Link } from 'react-router-dom'
 
 const ItemLista = ({
   id,
@@ -30,13 +31,14 @@ const ItemLista = ({
         >
           &#10008;
         </i>
-        <i
+        <Link
+          to={`/edit/${id}`}
           className="altera text-success fw-bold ms-2"
           title="Alterar"
-          onClick={alterarClick}
+          // onClick={alterarClick}
         >
           &#36;
-        </i>
+        </Link>
       </td>
     </tr>
   )
