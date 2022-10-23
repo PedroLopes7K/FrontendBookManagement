@@ -4,22 +4,24 @@ const MenuSuperior = () => {
   return (
     <nav className="navbar navbar-expand-sm bg-primary navbar-dark sticky-top">
       <div className="container">
-        <a className="navbar-brand">Controle Pessoal de Livros</a>
+        <Link to="/" className="navbar-brand">
+          Controle Pessoal de Livros
+        </Link>
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a to="/" className="nav-link">
+            <Link to="/" className="nav-link">
               Inclusão
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a to="/manut" className="nav-link">
+            <Link to="/manut" className="nav-link">
               Manutenção
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a to="/resumo" className="nav-link">
+            <Link to="/resumo" className="nav-link">
               Resumo
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
