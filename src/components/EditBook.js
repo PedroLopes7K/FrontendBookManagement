@@ -5,31 +5,36 @@ import { useForm } from 'react-hook-form'
 
 const EditBook = () => {
   const { register, handleSubmit, reset } = useForm()
-  let [book, setBook] = useState()
+  // let [book, setBook] = useState()
   let { id } = useParams()
+  let book
 
   useEffect(() => {
-    const getBookInfo = async () => {
+    async function getData() {
       try {
-        console.log(`O id do livro e: ${id}`)
-        const lista = await inAxios.get('livros')
-        let arrayBooks = lista.data
-        for (let obj of arrayBooks) {
-          if (obj.id == id) {
-            console.log(obj)
-            setBook(obj)
-          }
-        }
+        const livro = await inAxios.get(`livros/unico/${id}`)
+        // setBook(livro.data[0])
+        book = livro.data[0]
+        console.log(book)
       } catch (error) {
         alert(`Erro... Não foi possível obter os dados: ${error}`)
       }
     }
-    getBookInfo()
-  }, [id])
 
-  function editarLivro() {
-    console.log('bora editar')
+    getData()
+  }, [])
+
+  async function editarLivro(fields) {
+    try {
+      await inAxios.put(`livros/${book.id}`, fields)
+      alert('Livro alterado com sucesso')
+    } catch (error) {
+      alert(error)
+    }
+
+    reset({ titulo: '', autor: '', foto: '', ano: '', preco: '' })
   }
+  // const getData = async () => {}
 
   return (
     <div className="container mt-3">
@@ -41,10 +46,9 @@ const EditBook = () => {
             type="text"
             className="form-control"
             id="titulo"
-            required
-            value={book.titulo}
+            {...register('titulo', { required: true })}
             autoFocus
-            {...register('titulo')}
+            required
           />
         </div>
         <div className="form-group mt-2">
@@ -52,10 +56,9 @@ const EditBook = () => {
           <input
             type="text"
             className="form-control"
-            id="autor"
-            value={book.autor}
-            required
             {...register('autor')}
+            id="autor"
+            required
           />
         </div>
         <div className="form-group mt-2">
@@ -63,10 +66,9 @@ const EditBook = () => {
           <input
             type="url"
             className="form-control"
-            id="foto"
-            value={book.foto}
-            required
             {...register('foto')}
+            id="foto"
+            required
           />
         </div>
         <div className="row mt-2">
@@ -76,10 +78,9 @@ const EditBook = () => {
               <input
                 type="number"
                 className="form-control"
-                id="ano"
-                value={book.ano}
-                required
                 {...register('ano')}
+                id="ano"
+                required
               />
             </div>
           </div>
@@ -90,10 +91,9 @@ const EditBook = () => {
                 type="number"
                 className="form-control"
                 id="preco"
-                value={book.preco}
+                {...register('preco')}
                 step="0.01"
                 required
-                {...register('preco')}
               />
             </div>
           </div>
@@ -104,6 +104,9 @@ const EditBook = () => {
           className="btn btn-danger my-3 ms-3"
           value="Limpar"
         />
+        {/* <button className=" ms-2 btn btn-success" onClick={() => getData()}>
+          puxar dados
+        </button> */}
       </form>
     </div>
   )

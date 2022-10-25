@@ -14,7 +14,6 @@ const InclusaoLivros = () => {
   const salvar = async campos => {
     // JSON.stringify() converte um objeto JavaScript para uma String no formato JSON
     // alert(JSON.stringify(campos));
-
     try {
       const response = await inAxios.post('livros', campos)
       setAviso(`Ok! Livro cadastrado com código ${response.data.id}`)
