@@ -1,44 +1,50 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { inAxios } from '../config_axios'
 import { useForm } from 'react-hook-form'
 
 const EditBook = () => {
   const { register, handleSubmit, reset } = useForm()
-  // let [book, setBook] = useState()
+  let [book, setBook] = useState({
+    id: null,
+    titulo: '',
+    autor: '',
+    foto: '',
+    ano: null,
+    preco: null
+  })
   let { id } = useParams()
-  let book
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        const livro = await inAxios.get(`livros/unico/${id}`)
-        // setBook(livro.data[0])
-        book = livro.data[0]
-        console.log(book)
-      } catch (error) {
-        alert(`Erro... Não foi possível obter os dados: ${error}`)
-      }
+  const navigate = useNavigate()
+  async function getData(bookId) {
+    try {
+      const livro = await inAxios.get(`livros/unico/${bookId}`)
+      setBook(livro.data[0])
+    } catch (error) {
+      alert(`Erro... Não foi possível obter os dados: ${error}`)
     }
-
-    getData()
-  }, [])
+  }
+  useEffect(() => {
+    // fetch(`http://localhost:3001/livros/unico/${id}`)
+    //   .then(response => response.json())
+    //   .then(data => setBook(data[0]))
+    getData(id)
+  }, [id])
 
   async function editarLivro(fields) {
     try {
       await inAxios.put(`livros/${book.id}`, fields)
       alert('Livro alterado com sucesso')
+      navigate('/manut')
     } catch (error) {
       alert(error)
     }
 
     reset({ titulo: '', autor: '', foto: '', ano: '', preco: '' })
   }
-  // const getData = async () => {}
 
   return (
     <div className="container mt-3">
-      <h1>Editar livro </h1>
+      <h1>Editar livro: {book.titulo} </h1>
       <form onSubmit={handleSubmit(editarLivro)}>
         <div className="form-group">
           <label htmlFor="titulo">Título:</label>
@@ -49,6 +55,7 @@ const EditBook = () => {
             {...register('titulo', { required: true })}
             autoFocus
             required
+            placeholder={book.titulo}
           />
         </div>
         <div className="form-group mt-2">
@@ -59,6 +66,7 @@ const EditBook = () => {
             {...register('autor')}
             id="autor"
             required
+            placeholder={book.autor}
           />
         </div>
         <div className="form-group mt-2">
@@ -69,6 +77,7 @@ const EditBook = () => {
             {...register('foto')}
             id="foto"
             required
+            placeholder={book.foto}
           />
         </div>
         <div className="row mt-2">
@@ -81,6 +90,7 @@ const EditBook = () => {
                 {...register('ano')}
                 id="ano"
                 required
+                placeholder={book.ano}
               />
             </div>
           </div>
@@ -94,11 +104,12 @@ const EditBook = () => {
                 {...register('preco')}
                 step="0.01"
                 required
+                placeholder={book.preco}
               />
             </div>
           </div>
         </div>
-        <input type="submit" className="btn btn-primary my-3" value="Enviar" />
+        <input type="submit" className="btn btn-primary my-3" value="Editar" />
         <input
           type="reset"
           className="btn btn-danger my-3 ms-3"
